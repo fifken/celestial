@@ -117,6 +117,18 @@ psql -h localhost -U admin -d company_db
 
 ---
 
+SELECT 
+  dep.name AS department_name,
+  SUM(emp.salary) AS dep_salary
+FROM 
+  departments dep
+JOIN 
+  employees emp ON dep.id = emp.department_id
+GROUP BY 
+  dep.name
+ORDER BY 
+  dep_salary DESC;
+
 ### ❓ Soal 2: Karyawan yang Tidak Pernah Join Proyek
 
 > Tampilkan nama-nama karyawan yang tidak pernah bergabung dalam proyek manapun.
@@ -129,6 +141,16 @@ psql -h localhost -U admin -d company_db
 | Grace |
 
 ---
+
+SELECT 
+  emp.name
+FROM 
+  employees emp
+LEFT JOIN 
+  employee_projects epro ON emp.id = epro.employee_id
+WHERE 
+  epro.project_id IS NULL;
+
 
 ### ❓ Soal 3: Tiga Gaji Tertinggi Tiap Departemen
 
@@ -159,6 +181,13 @@ psql -h localhost -U admin -d company_db
 | _(kosong)_ |
 
 ---
+
+SELECT name
+FROM projects
+WHERE (end_date - start_date) > (
+  SELECT AVG(CURRENT_DATE - hire_date)
+  FROM employees
+);
 
 ### ❓ Soal 5: Karyawan yang Pernah Join Lebih dari 2 Proyek
 
