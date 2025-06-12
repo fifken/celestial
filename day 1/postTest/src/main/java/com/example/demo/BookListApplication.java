@@ -10,35 +10,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.*;
 
-import com.example.POSTTEST.BookList;
-
-@RestController
-@RequestMapping("/api/BookList")
 @SpringBootApplication
+@RestController
+@RequestMapping("/api/bookweb")
 public class BookListApplication {
 
-	private Map<Integer, Book> bookRepo = new HashMap<>();
-	private int idCounter = 1;
-
 	public static void main(String[] args) {
-		SpringApplication.run(BookApplication.class, args);
+		SpringApplication.run(BookListApplication.class, args);
 	}
 
 	@GetMapping
-	public Book getBook(@RequestParam int id ) {
-		return bookRepo.getOrDefault(id, new Book());
+	public bookList getBook(@RequestParam int id ) {
+		Map<Integer, bookList> bookRepo = new HashMap<>();
+		bookRepo.put(1, new bookList(1, "The Great Gatsby", "F. Scott Fitzgerald"));
+		bookRepo.put(2, new bookList(2, "1984", "George Orwell"));
+		bookRepo.put(3, new bookList(3, "To Kill a Mockingbird", "Harper Lee"));
+
+		return bookRepo.getOrDefault(id, null);
 	}
 
 	@PostMapping
-	public String createBook(@RequestBody BookList book) {
-		book.setId(idCounter++);
-		bookRepo.put(book.getId(), book);
-		return "Successfully created: " + book.getTitle();
+	public String createBook(@RequestBody bookList book) {
+		Map<Integer, bookList> bookRepo = new HashMap<>();
+		if (bookRepo.containsKey(book.getId())) {
+			return "Book with this ID already exists.";
+		} else {
+			bookRepo.put(book.getId(), book);
+			return "Book created: " + book.getTitle();
+		}	
 	}
 
 	@PutMapping
-	public String updateBook(@RequestBody BookList book) {
+	public String updateBook(@RequestBody bookList book) {
+		Map<Integer, bookList> bookRepo = new HashMap<>();
 		if (bookRepo.containsKey(book.getId())) {
 			bookRepo.put(book.getId(), book);
 			return "Book updated: " + book.getTitle();
@@ -49,8 +56,10 @@ public class BookListApplication {
 
 	@DeleteMapping
 	public String deleteBook(@RequestParam int id) {
-		if (bookRepo.remove(id) !=null) {
-			return "Book deleted.";
+		Map<Integer, bookList> bookRepo = new HashMap<>();
+		if (bookRepo.containsKey(id)) {
+			bookRepo.remove(id);
+			return "Book with ID " + id + " deleted.";
 		} else {
 			return "Book not found.";
 		}

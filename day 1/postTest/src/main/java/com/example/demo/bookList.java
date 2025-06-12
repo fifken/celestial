@@ -1,10 +1,10 @@
-package com.example.POSTTEST;
+package com.example.demo;
 
-public class BookList {
+public class bookList {
     private String title, author;
     private int id;
 
-    public BookList(int id1, String title1, String author1) {
+    public bookList(int id1, String title1, String author1) {
         this.id = id1;
         this.title = title1;
         this.author = author1;
