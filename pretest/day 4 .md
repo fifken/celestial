@@ -222,15 +222,15 @@ RBAC PreAuthorize
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-        .authorizeRequests()
+        .authorizeHttpRequests()
         .antMatchers("/admin").hasRole("ADMIN")
-        .anyRequest().requiresSecure()
+        .anyRequest().authenticated()
         .and()
         .formLogin();
     return http.build();
 }
 
-pake https jangan http
+authorizeRequests() -> authorizeHttpRequests()
 
 ```
 
